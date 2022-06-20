@@ -113,7 +113,7 @@
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>1.8.0</version>
 				<configuration>
-					<nodeVersion>v4.6.0</nodeVersion>
+					<nodeVersion>v16.15.1</nodeVersion>
 					<workingDirectory>src/main/resources/static</workingDirectory>
 				</configuration>
 				<executions>
@@ -139,7 +139,7 @@
 
 		</plugins>
 
-			<defaultGoal>install</defaultGoal>
+
 	</build>
 
 </project>
