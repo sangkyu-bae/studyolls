@@ -1,5 +1,6 @@
 package com.studyolls.studyolls.config;
 
+import com.studyolls.studyolls.account.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +27,7 @@ public class SecurityConfig {
 
 //    private final AccountService accountService;
     private final DataSource dataSource;
-
+    private final AccountService accountService;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
         return configuration.getAuthenticationManager();
@@ -39,16 +40,25 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
                 .mvcMatchers("/", "/login", "/sign-up", "/check-email", "/check-email-token",
-                        "/email-login", "/check-email-login", "login-link", "/profile/*").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
+                        "/email-login", "/check-email-login", "login-link", "/profile/*","/profile","/test").permitAll()
+                 .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
+                .mvcMatchers("/favicon.ico", "/resources/**", "/error").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and()
                 .logout().logoutSuccessUrl("/")
+                .and()
+                .rememberMe().userDetailsService(accountService).tokenRepository(tokenRepository())
                 .and().build();
-//                .rememberMe().userDetailsService(accountService).tokenRepository(tokenRepository())
-//                .and().build();
+    }
+
+    @Bean
+    public PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl jdbcTokenRepository=new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);
+        return jdbcTokenRepository;
+
     }
 
 //    @Bean
