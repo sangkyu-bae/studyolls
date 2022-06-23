@@ -94,23 +94,22 @@ public class AccountController {
         return "account/check-email";
     }
 
-    @PostMapping("/resend-confirm-email")
+    @GetMapping("/resend-confirm-email")
     public String resendConfirmEmail(@CurrentUser Account account,Model Model){
         accountService.sendSignUpCofirmEmail(account);
         return "redirect:/";
     }
 
-//    @GetMapping("/profile/{nickname}")
-//    public String viewProfile(@PathVariable String nickname,Model model,@CurrentUser Account account){
-//        Account byNickname= accountRepository.findByNickname(nickname);
-//        if(nickname==null){
-//            throw new IllegalArgumentException(nickname+"에 해당하는 사용자가 없습니다");
-//        }
-//        model.addAttribute(byNickname);
-//        model.addAttribute("inOwner",byNickname.equals(account));
-//
-//        return "account/profile";
-//    }
+    @GetMapping("/profile/{nickname}")
+    public String viewProfile(@PathVariable String nickname,Model model,@CurrentUser Account account){
+        Account byNickname= accountRepository.findByNickname(nickname);
+        if(nickname==null){
+            throw new IllegalArgumentException(nickname+"에 해당하는 사용자가 없습니다");
+        }
+        model.addAttribute(byNickname);
+        model.addAttribute("isOwner",byNickname.equals(account));
+        return "account/profile";
+    }
 
 //    @GetMapping("profile/{nickname}")
 //    public String viewProfile(@PathVariable String nickname, Model model, @CurrentUser Account account) {
@@ -123,11 +122,11 @@ public class AccountController {
 //        return "account/profile";
 //    }
 
-    @GetMapping("/profile")
-    public String viewProfile() {
-
-        return "account/profile";
-    }
+//    @GetMapping("/profile")
+//    public String viewProfile() {
+//
+//        return "account/profile";
+//    }
 
     @GetMapping("/test")
     public String tests(){
