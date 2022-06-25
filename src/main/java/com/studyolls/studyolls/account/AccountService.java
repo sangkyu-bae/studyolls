@@ -1,8 +1,8 @@
 package com.studyolls.studyolls.account;
 
 import com.studyolls.studyolls.domain.Account;
-import com.studyolls.studyolls.settings.Notifications;
-import com.studyolls.studyolls.settings.Profile;
+import com.studyolls.studyolls.settings.form.Notifications;
+import com.studyolls.studyolls.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
@@ -10,13 +10,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,5 +111,22 @@ public class AccountService implements UserDetailsService {
     public void updateNotifications(Account account, Notifications notifications) {
         modelMapper.map(notifications,account);
         accountRepository.save(account);
+    }
+
+    public void updateAccount(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account);
+
+    }
+
+    public void sendLoginLink(Account account) {
+        account.generateEmailCheckToken();
+        SimpleMailMessage mailMessage=new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());
+        mailMessage.setSubject("스터디올레, 회원 가입 인증");
+        mailMessage.setText("/check-email-token?token="+ account.getEmailCheckToken()+
+                "&email="+ account.getEmail());
+        javaMailSender.send(mailMessage);
     }
 }

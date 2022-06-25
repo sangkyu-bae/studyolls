@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -109,6 +110,25 @@ public class AccountController {
         model.addAttribute(byNickname);
         model.addAttribute("isOwner",byNickname.equals(account));
         return "account/profile";
+    }
+
+    @GetMapping("/email-login")
+    public String emailLoginForm(){
+        return "account/email-login";
+    }
+    @PostMapping("email-login")
+    public String sendEmailLoginLink(String email, Model model, RedirectAttributes attributes){
+
+       Account account=accountRepository.findByEmail(email);
+       if(account==null){
+           model.addAttribute("error","유효한 이메일이 없습니다.");
+           return "account/email-login";
+       }
+
+       accountService.sendLoginLink(account);
+        attributes.addFlashAttribute("message","이메일 인증 메일을 발송 했습니다.");
+
+        return "redirect:/email-login";
     }
 
 //    @GetMapping("profile/{nickname}")

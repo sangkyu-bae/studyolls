@@ -1,4 +1,4 @@
-package com.studyolls.studyolls.settings;
+package com.studyolls.studyolls.settings.form;
 
 import com.studyolls.studyolls.domain.Account;
 import lombok.Data;
