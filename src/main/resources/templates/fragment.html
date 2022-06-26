@@ -5,8 +5,9 @@
 
 <head th:fragment="head">
     <title>StudyOlle</title>
-    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css"/>
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
@@ -14,13 +15,17 @@
     <title>StudyOlle</title>
     <style>
         .container{
-
+            max-width: 100%;
         }
 
         .navbar{
             background-color: black;
         }
 
+
+        .tagify--outside{
+            border: 0;
+        }
     </style>
 </head>
 <nav th:fragment="main-nav" class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -110,6 +115,16 @@
             })
         }, false)
     }())
+</script>
+<script type="application/javascript" th:fragment="ajax-csrf-header">
+    $(function(){
+        const csrfToken=/*[[${_csrf.token}]]*/ null;
+        const csrfHeader=/*[[${_csrf.headerName}]]*/ null;
+
+        $(document).ajaxSend(function (e,xhr,options){
+            xhr.setRequestHeader(csrfHeader,csrfToken);
+        });
+    });
 </script>
 
 

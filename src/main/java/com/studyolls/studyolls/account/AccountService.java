@@ -1,6 +1,8 @@
 package com.studyolls.studyolls.account;
 
 import com.studyolls.studyolls.domain.Account;
+import com.studyolls.studyolls.domain.Tag;
+import com.studyolls.studyolls.domain.Zone;
 import com.studyolls.studyolls.settings.form.Notifications;
 import com.studyolls.studyolls.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -32,23 +36,17 @@ public class AccountService implements UserDetailsService {
 
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount= saveNewAccount(signUpForm);
-        newAccount.generateEmailCheckToken();
         sendSignUpCofirmEmail(newAccount);
 
         return newAccount;
     }
 
     private Account saveNewAccount(SignUpForm signUpForm) {
-        Account account= Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .studyCreatedByWeb(true)
-                .studyUpdateByWeb(true)
-                .studyEnrollmentResultByWeb(true)
-                .build();
-        Account newAccount = accountRepository.save(account);
-        return newAccount;
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        Account account=modelMapper.map(signUpForm,Account.class);
+        account.generateEmailCheckToken();
+
+        return accountRepository.save(account);
     }
 
     public void sendSignUpCofirmEmail(Account newAccount) {
@@ -125,8 +123,28 @@ public class AccountService implements UserDetailsService {
         SimpleMailMessage mailMessage=new SimpleMailMessage();
         mailMessage.setTo(account.getEmail());
         mailMessage.setSubject("스터디올레, 회원 가입 인증");
-        mailMessage.setText("/check-email-token?token="+ account.getEmailCheckToken()+
+        mailMessage.setText("/login-by-email?token="+ account.getEmailCheckToken()+
                 "&email="+ account.getEmail());
         javaMailSender.send(mailMessage);
+    }
+
+    public void addTag(Account account, Tag tag) {
+        Optional<Account>byId= accountRepository.findById(account.getId());
+        byId.ifPresent(a->a.getTags().add(tag));
+    }
+
+    public Set<Tag> getTags(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getTags();
+    }
+
+    public void removeTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a->a.getTags().remove(tag));
+    }
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
     }
 }
