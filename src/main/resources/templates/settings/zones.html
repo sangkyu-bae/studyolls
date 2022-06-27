@@ -34,7 +34,7 @@
 </script>
 <script type="application/javascript">
     $(function(){
-        function tagRequest(url,zoneTitle){
+        function tagRequest(url,zoneName){
             $.ajax({
                 dataType:"json",
                 autocomplete:{
@@ -47,10 +47,16 @@
                 data:JSON.stringify({'zoneName':zoneName})
             }).done(function (data,status){
                 console.log("${data} and status is ${status}");
-            })
+            }) .fail(function(data, textStatus, errorThrown){
+                console.log("fail in get addr");
+                console.log(data);
+                console.log(textStatus);
+                console.log(errorThrown);
+            });
         }
 
         const onAdd =e=> tagRequest("/add",e.detail.data.value);
+
 
         const onRemove =e=> tagRequest("/remove",e.detail.data.value);
 

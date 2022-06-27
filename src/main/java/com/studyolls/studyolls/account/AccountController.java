@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 
@@ -96,7 +97,7 @@ public class AccountController {
     }
 
     @GetMapping("/resend-confirm-email")
-    public String resendConfirmEmail(@CurrentUser Account account,Model Model){
+    public String resendConfirmEmail(@CurrentUser Account account,Model Model) throws MessagingException {
         accountService.sendSignUpCofirmEmail(account);
         return "redirect:/";
     }

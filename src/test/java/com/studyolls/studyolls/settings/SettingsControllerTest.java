@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.mail.MessagingException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
@@ -31,7 +33,7 @@ class SettingsControllerTest {
     AccountRepository accountRepository;
 
     @BeforeEach
-    void beforeEach(){
+    void beforeEach() throws MessagingException {
         SignUpForm signUpForm=new SignUpForm();
         signUpForm.setNickname("keesun");
         signUpForm.setEmail("keesun@email.com");

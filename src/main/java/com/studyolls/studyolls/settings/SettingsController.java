@@ -131,41 +131,7 @@ public class SettingsController {
         return "redirect:"+SETTINGS_NOTIFICATIONS_URL;
     }
 
-    @GetMapping(SETTINGS_TAGS_URL)
-    public String updateTags(@CurrentUser Account account,Model model) throws JsonProcessingException {
-        model.addAttribute(account);
-        Set<Tag> tags = accountService.getTags(account);
-        model.addAttribute("tags",tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
 
-        List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
-        model.addAttribute("whiteList",objectMapper.writeValueAsString(allTags));
-
-        return SETTINGS_TAGS_VIEW_NAME;
-    }
-    @PostMapping(SETTINGS_TAGS_URL+"/add")
-    @ResponseBody
-    public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
-        String title=tagForm.getTagTitle();
-
-        Tag tag=tagRepository.findByTitle(title);
-        if(tag==null) tag= tagRepository.save(Tag.builder().title(title).build());
-
-        accountService.addTag(account,tag);
-        return ResponseEntity.ok().build();
-
-    }
-
-    @PostMapping(SETTINGS_TAGS_URL+"/remove")
-    @ResponseBody
-    public ResponseEntity removeTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
-        String title=tagForm.getTagTitle();
-
-        Tag tag=tagRepository.findByTitle(title);
-        if(tag==null) return ResponseEntity.badRequest().build();
-        accountService.removeTag(account,tag);
-        return ResponseEntity.ok().build();
-
-    }
     @GetMapping(SETTINGS_ACCOUNT_URL)
     public String updateAccountForm(@CurrentUser Account account,Model model){
         model.addAttribute(account);
@@ -187,6 +153,41 @@ public class SettingsController {
         return "redirect:"+SETTINGS_ACCOUNT_URL;
 
     }
+    @GetMapping(SETTINGS_TAGS_URL)
+    public String updateTags(@CurrentUser Account account,Model model) throws JsonProcessingException {
+        model.addAttribute(account);
+        Set<Tag> tags = accountService.getTags(account);
+        model.addAttribute("tags",tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+
+        List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
+        model.addAttribute("whiteList",objectMapper.writeValueAsString(allTags));
+
+        return SETTINGS_TAGS_VIEW_NAME;
+    }
+    @PostMapping(SETTINGS_TAGS_URL+"/add")
+    @ResponseBody
+    public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
+        String title=tagForm.getTagTitle();
+        System.out.println("타?");
+        Tag tag=tagRepository.findByTitle(title);
+        if(tag==null) tag= tagRepository.save(Tag.builder().title(title).build());
+
+        accountService.addTag(account,tag);
+        return ResponseEntity.ok().build();
+
+    }
+
+    @PostMapping(SETTINGS_TAGS_URL+"/remove")
+    @ResponseBody
+    public ResponseEntity removeTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
+        String title=tagForm.getTagTitle();
+
+        Tag tag=tagRepository.findByTitle(title);
+        if(tag==null) return ResponseEntity.badRequest().build();
+        accountService.removeTag(account,tag);
+        return ResponseEntity.ok().build();
+
+    }
 
     @GetMapping(SETTINGS_ZONE_URL)
     public String updateZoneForm(@CurrentUser Account account,Model model) throws JsonProcessingException {
@@ -203,8 +204,28 @@ public class SettingsController {
     }
 
     @PostMapping(SETTINGS_ZONE_URL+"/add")
+    @ResponseBody
     public ResponseEntity addZone(@CurrentUser Account account,@RequestBody ZoneForm zoneForm){
-        return null;
+
+        System.out.println("타긴타?");
+        Zone zone=zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
+        if(zone==null)return ResponseEntity.badRequest().build();
+
+        accountService.addZone(account,zone);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(SETTINGS_ZONE_URL+"/remove")
+    @ResponseBody
+    public ResponseEntity removeZOne(@CurrentUser Account account,@RequestBody ZoneForm zoneForm){
+        Zone zone=zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
+        if(zone==null) return ResponseEntity.badRequest().build();
+
+        accountService.removeZone(account,zone);
+
+        return ResponseEntity.ok().build();
+
     }
 
 }
