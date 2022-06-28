@@ -168,7 +168,6 @@ public class SettingsController {
     @ResponseBody
     public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
         String title=tagForm.getTagTitle();
-        System.out.println("타?");
         Tag tag=tagRepository.findByTitle(title);
         if(tag==null) tag= tagRepository.save(Tag.builder().title(title).build());
 

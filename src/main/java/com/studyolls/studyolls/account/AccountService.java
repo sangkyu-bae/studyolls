@@ -61,7 +61,7 @@ public class AccountService implements UserDetailsService {
         return accountRepository.save(account);
     }
 
-    public void sendSignUpCofirmEmail(Account newAccount) throws MessagingException {
+    public void sendSignUpCofirmEmail(Account newAccount)   {
 //        MimeMessage mimeMessage=javaMailSender.createMimeMessage();
 //        MimeMessageHelper mimeMessageHelper=new MimeMessageHelper(mimeMessage,false,"UTF-8");
 //        mimeMessageHelper.setTo(newAccount.getEmail());
@@ -69,19 +69,20 @@ public class AccountService implements UserDetailsService {
 //        mimeMessageHelper.setText("/check-email-token?token="+ newAccount.getEmailCheckToken()+
 //                "&email="+ newAccount.getEmail(),false);
 //        javaMailSender.send(mimeMessage);
+
         Context context=new Context();
         context.setVariable("link","/check-email-token?token="+ newAccount.getEmailCheckToken()+
                 "&email="+ newAccount.getEmail());
+        context.setVariable("nickname",newAccount.getNickname());
         context.setVariable("linkName","이메일 인증하기");
-        context.setVariable("message","슽디올레 서비스를 사용하려면 링크를 클릭하세요");
+        context.setVariable("message","스터디올레 서비스를 사용하려면 링크를 클릭하세요");
         context.setVariable("host",appProperties.getHost());
 
         String message=templateEngine.process("mail/simple-link",context);
         EmailMessage emailMessage=EmailMessage.builder()
                 .to(newAccount.getEmail())
                 .subject("스터디올레, 회원 가입 인증")
-                .message("/check-email-token?token="+ newAccount.getEmailCheckToken()+
-                        "&email="+ newAccount.getEmail())
+                .message(message)
                 .build();
         emailService.sendEmail(emailMessage);
     }
@@ -147,11 +148,18 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendLoginLink(Account account) {
+        Context context=new Context();
+        context.setVariable("link","/login-by-email?token="+ account.getEmailCheckToken()+
+                "&email="+ account.getEmail());
+        context.setVariable("nickname",account.getNickname());
+        context.setVariable("linkName","이메일로 로그인하기");
+        context.setVariable("message","스터디올레 로그인 하려면 아래링크를 클릭하세요.");
+        String message=templateEngine.process("mail/simple-link",context);
+
         EmailMessage emailMessage=EmailMessage.builder()
                 .to(account.getEmail())
                 .subject("스터디올레, 회원 가입 인증")
-                .message("/login-by-email?token="+ account.getEmailCheckToken()+
-                        "&email="+ account.getEmail())
+                .message(message)
                 .build();
 
         emailService.sendEmail(emailMessage);

@@ -27,7 +27,7 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
 
-    @InitBinder("sginUpForm")
+    @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(signUpFormValidator);
     }
@@ -71,22 +71,6 @@ public class AccountController {
         model.addAttribute("nickname",account.getNickname());
         return view;
     }
-
-//    @GetMapping("recheck-email")
-//    public String recheckEmail(String email ,Model model){
-//        Account account=accountRepository.findByEmail(email);
-//        String view="account/recheck-email";
-//        if(account ==null){
-//            model.addAttribute("error","가입되지 않은 이메일입니다.");
-//            return view;
-//        }
-//
-//        model.addAttribute(account);
-//        account.generateEmailCheckToken();
-//        accountService.sendSignUpCofirmEmail(account);
-//
-//        return view;
-//    }
 
     @GetMapping("/check-email")
     public String checkEmail(@CurrentUser Account account,Model model){
