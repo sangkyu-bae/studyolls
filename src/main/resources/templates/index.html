@@ -21,3 +21,72 @@
 </html>
 
 
+<script>
+    // var a=document.querySelectorAll(".vv-icon-button");
+    // var b=document.querySelectorAll('.vv_menu_text');
+
+    // for(var i=0;i<2;i++){
+    //     a[1].click();
+    //     b[10].click();
+    //     var c= document.querySelectorAll('.save');
+    //     for(var i=0;i<c.length;i++){
+    //         if(c[i].firstElementChild.innerText=='Start'){
+    //             console.log(c[i])
+    //             c[i].click()
+    //             break;
+    //         }
+    //     }
+    // }
+
+
+    var a=document.querySelectorAll(".vv-icon-button");
+    var b=document.querySelectorAll('.vv_menu_text');
+    a[1].click();
+    b[10].click();
+
+    var c= document.querySelectorAll('.save');
+    for(var i=0;i<c.length;i++){
+            if(c[i].firstElementChild.innerText=='Start'){
+                console.log(c[i])
+                c[i].click()
+                break;
+            }
+    }
+
+
+
+    var a=document.querySelectorAll(".vv-icon-button");
+    var b=document.querySelectorAll('.vv_menu_text');
+
+    b[10].click();
+
+let test=null
+
+const a=()=>{
+    for(var i=0;i<1;i++){
+        var a=document.querySelectorAll(".vv-icon-button");
+        a[1].click()
+        a[1].click()
+        a[1].click()
+        setTimeout(() => {
+            var b=document.querySelectorAll('.vv_menu_text');
+            b[10].click();   
+        }, 100);
+
+        setTimeout(() => {
+            var c= document.querySelectorAll('.save');
+            for(var i=0;i<c.length;i++){
+                if(c[i].firstElementChild.innerText=='Start'){
+                    console.log(c[i]);
+                }
+            }
+        }, 500)
+    }
+}
+
+
+vv_gridview_cell 
+  
+$('vv_gridview_row').children('vv_gridview_cell');
+
+</script>

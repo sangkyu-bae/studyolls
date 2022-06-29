@@ -28,6 +28,7 @@ public class HtmlEmailService implements EmailService{
             log.info("sent email:{}",emailMessage.getMessage());
         }catch (Exception e){
             log.error("falied to sand email",e);
+            throw new RuntimeException(e);
         }
     }
 }

@@ -70,4 +70,8 @@ public class Account {
     public boolean isValidToken(String token) {
         return this.emailCheckToken.equals(token);
     }
+
+    public boolean isManagerOf(Study study) {
+        return study.getManagers().contains(this);
+    }
 }
