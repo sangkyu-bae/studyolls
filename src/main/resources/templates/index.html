@@ -89,4 +89,53 @@ vv_gridview_cell
   
 $('vv_gridview_row').children('vv_gridview_cell');
 
+
+var b=document.querySelector('.vv_gridview_cell ')
+var c=b.firstElementChild.firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.firstElementChild
+
+const tests=()=>{
+    var a=document.querySelector('.vv_gridview_cell ').firstElementChild.firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.firstElementChild
+    a.click();
+    var b=document.querySelectorAll('.vv_menu_text');
+    setTimeout(() => {
+                var b=document.querySelectorAll('.vv_menu_text');
+                b[11].click();   
+            }, 600);
+    setTimeout(() => {
+        var c= document.querySelectorAll('.save');
+                for(var i=0;i<c.length;i++){
+                    if(c[i].firstElementChild.innerText=='Start'){
+                        console.log(c[i]);
+                        c[i].addEventListener("click", function(event){
+                            event.preventDefault();
+                        })
+                        c[i].click();
+                        console.log("클릭함")
+                    }
+                }
+            }, 900)
+}
+setTimeout(()=>{
+    let count =0;
+    for(var i=0;i<2;i++){
+        if(count>0){
+            window.addEventListener('DOMContentLoaded', (event) => {
+                setTimeout(()=>{
+                    tests()
+                },1500)
+            });
+        }else{
+            setTimeout(()=>{
+                tests()
+            },1500)
+        }
+        count++;
+    }
+},1500)
+
+
+
+        
+
+
 </script>

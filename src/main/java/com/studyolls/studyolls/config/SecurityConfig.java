@@ -45,8 +45,8 @@ public class SecurityConfig {
                 .formLogin().loginPage("/login").permitAll()
                 .and()
                 .logout().logoutSuccessUrl("/")
-                //.and()
-                //.rememberMe().userDetailsService(accountService).tokenRepository(tokenRepository())
+//                .and()
+//                .rememberMe().userDetailsService(accountService).tokenRepository(tokenRepository())
                 .and().build();
     }
 

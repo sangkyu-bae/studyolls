@@ -196,7 +196,6 @@
         </li>
     </ul>
 </div>
-
 <div th:fragment="study-settings-menu (currentMenu)" class="list-group">
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'description'}? active"
        href="#" th:href="@{'/study/' + ${study.path} + '/settings/description'}">소개</a>
@@ -209,6 +208,32 @@
     <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'study'}? active"
        href="#" th:href="@{'/study/' + ${study.path} + '/settings/study'}">스터디</a>
 </div>
+<div th:fragment="message" th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+    <span th:text="${message}">완료</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div th:fragment="editor-script">
+    <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            $('.editor').summernote({
+                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+                placeholder: '스터디의 목표, 일정, 진행 방식, 사용할 교재 또는 인터넷 강좌 그리고 모집중인 스터디원 등 스터디에 대해 자세히 적어 주세요.',
+                tabsize: 2,
+                height: 300
+            });
+        });
+    </script>
+</div>
+<script th:fragment="tooltip" type="application/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+
 <script type="application/javascript" th:fragment="form-validation">
     (function () {
         'use strict';
@@ -240,6 +265,88 @@
         });
     });
 </script>
+
+<div th:fragment="update-zones (baseUrl)">
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            function tagRequest(url, zoneName) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "[(${baseUrl})]" + url,
+                    data: JSON.stringify({'zoneName': zoneName})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
+            const onAdd =e=> tagRequest("/add",e.detail.data.value);
+            const onRemove =e=> tagRequest("/remove",e.detail.data.value);
+
+            var tagInput = document.querySelector("#zones");
+
+            var tagify = new Tagify(tagInput, {
+                pattern: /^.{0,20}$/,
+                whitelist:JSON.parse(document.querySelector("#whitelist").textContent),
+                dropdown: {
+                    position: "input",
+                    enabled : 0 // always opens dropdown when input gets focus
+                }
+            });
+
+            tagify.on("add",onAdd);
+            tagify.on("remove",onRemove);
+        });
+    </script>
+</div>
+<div th:fragment="update-tags (baseUrl)">
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script type="application/javascript" th:inline="javascript">
+        $(function() {
+            function tagRequest(url, tagTitle) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "[(${baseUrl})]" + url,
+                    data: JSON.stringify({'tagTitle': tagTitle})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
+
+            const onAdd =e=> tagRequest("/add",e.detail.data.value);
+
+            const onRemove =e=> tagRequest("/remove",e.detail.data.value);
+
+            var tagInput = document.querySelector("#tags");
+            var tagify = new Tagify(tagInput, {
+                pattern: /^.{0,20}$/,
+                whitelist:JSON.parse(document.querySelector("#whiteslist").textContent),
+                dropdown: {
+                    position: "input",
+                    enabled : 0 // always opens dropdown when input gets focus
+                }
+            });
+
+            tagify.on("add",onAdd);
+            tagify.on("remove",onRemove);
+
+            // tagify.DOM.input.classList.add('form-control');
+            // tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input,tagify.DOM.scope);
+
+        })
+    </script>
+</div>
 
 
 <!--<footer th:fragment="footer">-->

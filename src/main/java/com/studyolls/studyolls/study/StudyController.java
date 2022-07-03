@@ -1,6 +1,7 @@
 package com.studyolls.studyolls.study;
 
 import com.studyolls.studyolls.account.CurrentUser;
+import com.studyolls.studyolls.account.UserAccount;
 import com.studyolls.studyolls.domain.Account;
 import com.studyolls.studyolls.domain.Study;
 import com.studyolls.studyolls.study.form.StudyForm;
@@ -55,13 +56,11 @@ public class StudyController {
     }
 
     @GetMapping("/study/{path}")
-    public String viewStudy(@CurrentUser Account account, @PathVariable String path, Model model){
-        Study study=studyService.getStudy(path);
-
+    public String viewStudy(@CurrentUser Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudy(path);
         model.addAttribute(account);
         model.addAttribute(study);
-
-        return"study/view";
+        return "study/view";
     }
 
     @GetMapping("/study/{path}/members")
@@ -71,5 +70,10 @@ public class StudyController {
         model.addAttribute(account);
         model.addAttribute(study);
         return "study/members";
+    }
+    @GetMapping("study/{path}/join")
+    public String joinStudy(@CurrentUser Account account,@PathVariable String path){
+        Study study=studyRepository.findStudywithMembersByPath(path);
+        return  null;
     }
 }

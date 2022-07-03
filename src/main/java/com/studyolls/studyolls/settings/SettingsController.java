@@ -11,6 +11,7 @@ import com.studyolls.studyolls.settings.form.*;
 import com.studyolls.studyolls.settings.vaildator.NicknameValidator;
 import com.studyolls.studyolls.settings.vaildator.PasswordFormValidator;
 import com.studyolls.studyolls.tag.TagRepository;
+import com.studyolls.studyolls.tag.TagService;
 import com.studyolls.studyolls.zone.ZoneForm;
 import com.studyolls.studyolls.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,8 @@ public class SettingsController {
     private final ObjectMapper objectMapper;
 
     private final ZoneRepository zoneRepository;
+
+    private final TagService tagService;
 
 
     @InitBinder("passwordForm")
@@ -167,9 +170,7 @@ public class SettingsController {
     @PostMapping(SETTINGS_TAGS_URL+"/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
-        String title=tagForm.getTagTitle();
-        Tag tag=tagRepository.findByTitle(title);
-        if(tag==null) tag= tagRepository.save(Tag.builder().title(title).build());
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
 
         accountService.addTag(account,tag);
         return ResponseEntity.ok().build();
