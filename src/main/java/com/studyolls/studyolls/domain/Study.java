@@ -4,6 +4,8 @@ import com.studyolls.studyolls.account.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +26,9 @@ import java.util.Set;
 })
 @NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
         @NamedAttributeNode("managers")
+})
+@NamedEntityGraph(name="Study.withMembers" ,attributeNodes = {
+        @NamedAttributeNode("members")
 })
 @Entity
 @Getter@Setter@EqualsAndHashCode(of="id")
@@ -72,6 +77,7 @@ public class Study {
 
     private boolean useBanner;
 
+    private int memberCount;
     public void addManager(Account account) {
         this.managers.add(account);
     }
@@ -136,5 +142,19 @@ public class Study {
 
     public boolean isRemovable() {
         return !this.published;
+    }
+
+    public void addMember(Account account) {
+        this.getMembers().add(account);
+        this.memberCount++;
+    }
+
+    public void removeMember(Account account) {
+        this.getMembers().remove(account);
+        this.memberCount--;
+    }
+
+    public String getEncodedPath() {
+        return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
     }
 }

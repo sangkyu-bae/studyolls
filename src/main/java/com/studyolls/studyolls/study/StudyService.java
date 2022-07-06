@@ -151,4 +151,12 @@ public class StudyService {
         }
 
     }
+
+    public void addMember(Study study, Account account) {
+        study.addMember(account);
+    }
+
+    public void removeMember(Study study,Account account){
+        study.removeMember(account);
+    }
 }

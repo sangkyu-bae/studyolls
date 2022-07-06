@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -72,8 +73,36 @@ public class StudyController {
         return "study/members";
     }
     @GetMapping("study/{path}/join")
-    public String joinStudy(@CurrentUser Account account,@PathVariable String path){
+    public String joinStudy(@CurrentUser Account account,@PathVariable String path,Model model){
         Study study=studyRepository.findStudywithMembersByPath(path);
-        return  null;
+        Set<Account> checkMember= study.getMembers();
+
+        for(Account ac:checkMember){
+            if(ac.getEmail().equals(account.getEmail())){
+                model.addAttribute("message","이미 스터디에 가입된 회원입니다.");
+                return "/study/"+study.getEncodedPath();
+            }
+        }
+        studyService.addMember(study,account);
+
+        return "redirect:/study/" + study.getEncodedPath() + "/members";
+    }
+
+    @GetMapping("study/{path}/leave")
+    public String leaveStudy(@CurrentUser Account account,@PathVariable String path,Model model){
+        Study study=studyRepository.findStudywithMembersByPath(path);
+
+        Set<Account> checkMember= study.getMembers();
+        for(Account ac:checkMember){
+            if(!ac.getEmail().equals(account.getEmail())){
+                model.addAttribute("message","이미 탈퇴된 회원입니다.");
+                return "/study/"+study.getEncodedPath();
+            }
+        }
+
+        studyService.removeMember(study,account);
+
+        return "redirect:/study/" + study.getEncodedPath() + "/members";
+
     }
 }
