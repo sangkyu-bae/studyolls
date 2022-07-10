@@ -5,5 +5,7 @@ import javax.persistence.Entity;
 
 
 public enum EventType {
-    FCFS,CONFIRMATIVE;
+
+    FCFS, CONFIRMATIVE;
+
 }
