@@ -18,7 +18,7 @@
         <div class="col-4 text-right justify-content-end">
                 <span sec:authorize="isAuthenticated()">
                     <button th:if="${event.isEnrollableFor(#authentication.principal)}"
-                            class="btn btn-outline-primary" data-toggle="modal" data-target="#enroll">
+                            class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#enroll">
                         <i class="fa fa-plus-circle"></i> 참가 신청
                     </button>
                     <button th:if="${event.isDisenrollableFor(#authentication.principal)}"
@@ -180,7 +180,7 @@
                    th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/edit'}" >
                     모임 수정
                 </a> <br/>
-                <button class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#cancel">
+                <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"  data-bs-target="#cancel">
                     모임 취소
                 </button>
             </dd>
