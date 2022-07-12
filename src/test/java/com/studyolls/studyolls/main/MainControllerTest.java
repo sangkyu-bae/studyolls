@@ -1,8 +1,8 @@
 package com.studyolls.studyolls.main;
 
-import com.studyolls.studyolls.account.AccountRepository;
-import com.studyolls.studyolls.account.AccountService;
-import com.studyolls.studyolls.account.SignUpForm;
+import com.studyolls.studyolls.modules.account.AccountRepository;
+import com.studyolls.studyolls.modules.account.AccountService;
+import com.studyolls.studyolls.modules.account.form.SignUpForm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.mail.MessagingException;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;

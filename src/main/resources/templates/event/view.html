@@ -22,7 +22,7 @@
                         <i class="fa fa-plus-circle"></i> 참가 신청
                     </button>
                     <button th:if="${event.isDisenrollableFor(#authentication.principal)}"
-                            class="btn btn-outline-primary" data-toggle="modal" data-target="#disenroll">
+                            class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#disenroll">
                         <i class="fa fa-minus-circle"></i> 참가 신청 취소
                     </button>
 <!--                    <span class="text-success" th:if="${event.isAttended(#authentication.principal)}" disabled>-->
