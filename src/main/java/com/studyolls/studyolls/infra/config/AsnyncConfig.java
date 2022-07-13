@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.Executor;
-
+@Slf4j
 @Configuration
 @EnableAsync
 public class AsnyncConfig implements AsyncConfigurer {
@@ -20,9 +20,13 @@ public class AsnyncConfig implements AsyncConfigurer {
     public Executor getAsyncExecutor(){
         ThreadPoolTaskExecutor executor=new ThreadPoolTaskExecutor();
         int processors=Runtime.getRuntime().availableProcessors();
+        log.info("processor count {}",processors);
         executor.setCorePoolSize(processors);
         executor.setMaxPoolSize(processors*2);
         executor.setQueueCapacity(50);
+        executor.setKeepAliveSeconds(60);
+        executor.setThreadNamePrefix("AsnyncExecutor-");
+        executor.initialize();
         return executor;
     }
 
