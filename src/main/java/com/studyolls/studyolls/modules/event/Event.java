@@ -162,4 +162,10 @@ public class Event {
             enrollment.setAccepted(true);
         }
     }
+
+    public void reject(Enrollment enrollment) {
+        if(this.eventType==EventType.CONFIRMATIVE){
+            enrollment.setAccepted(false);
+        }
+    }
 }

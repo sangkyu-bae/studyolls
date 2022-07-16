@@ -15,7 +15,7 @@ public class Notification {
     @Id @GeneratedValue
     private Long id;
 
-    private String tilte;
+    private String title;
 
     private String link;
 

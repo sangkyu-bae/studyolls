@@ -33,7 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
                 .mvcMatchers("/", "/login", "/sign-up", "/check-email", "/check-email-token","/login-by-email",
-                        "/email-login", "/check-email-login", "login-link", "/profile/*").permitAll()
+                        "/email-login", "/check-email-login", "login-link", "/profile/*","/search/study").permitAll()
 
                 .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
                 .mvcMatchers("/favicon.ico", "/resources/**", "/error").permitAll()

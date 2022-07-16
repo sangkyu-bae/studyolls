@@ -46,7 +46,8 @@
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link"th:href="@{/notifications}">
-                        <i class="fa fa-bell-o" aria-hidden="true"></i>
+                        <i th:if="${!hasNotification}" class="fa fa-bell-o" aria-hidden="true"></i>
+                        <span class="text-info"><i th:if="${hasNotification}" class="fa fa-bell" aria-hidden="true"></i></span>
                     </a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
@@ -76,8 +77,8 @@
                     </div>
                 </li>
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form th:action="@{/search/study}" class="form-inline" method="get">
+                <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="스터디 찾기" aria-label="Search" />
             </form>
         </div>
     </div>
@@ -307,6 +308,17 @@
         </form>
     </div>
 </div>
+<ul th:fragment="notification-list (notifications)" class="list-group list-group-flush">
+    <a href="#" th:href="@{${noti.link}}" th:each="noti: ${notifications}"
+       class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <small class="text-muted" th:text="${noti.title}">Noti title</small>
+            <small class="fromNow text-muted" th:text="${noti.createLocalDateTime}">3 days ago</small>
+        </div>
+        <p th:text="${noti.message}" class="text-left mb-0 mt-1">message</p>
+    </a>
+</ul>
+
 <div th:fragment="editor-script">
     <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
     <script type="application/javascript">

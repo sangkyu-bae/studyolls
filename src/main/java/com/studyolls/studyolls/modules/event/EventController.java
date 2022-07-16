@@ -159,6 +159,15 @@ public class EventController {
         return "redirect:/study/"+study.getEncodedPath()+"/events/"+event.getId();
     }
 
+    @GetMapping("/events/{eventId}/enrollments/{enrollmentId}/reject")
+    public String rejectEnrollment(@CurrentUser Account account, @PathVariable String path,
+                                   @PathVariable("eventId") Event event,@PathVariable("enrollmentId") Enrollment enrollment){
+        Study study =studyService.getStudyToUpdate(account,path);
+        eventService.rejectEnrollment(event,enrollment);
+        return "redirect:/study/" + study.getEncodedPath() + "/events/" + event.getId();
+    }
+
+
     @GetMapping("/events/{eventId}/enrollments/{enrollmentId}/checkin")
     public String checkInEnrollment(@CurrentUser Account account,@PathVariable String path,
                                     @PathVariable("eventId") Event event,@PathVariable("enrollmentId") Enrollment enrollment){
