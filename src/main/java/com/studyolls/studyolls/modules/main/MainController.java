@@ -30,12 +30,15 @@ public class MainController {
             Account accountLoaded =accountRepository.findAccountWithTagsAndZonesById(account.getId());
             model.addAttribute(accountLoaded);
             model.addAttribute("enrollmentList",enrollmentRepository.findByAccountAndAcceptedOrderByEnrolledAtDesc(accountLoaded,true));
-            model.addAttribute("studyManagerOf",
-                    studyRepository.findFirst5ByManagersContainingAndClosedOrderByPublishedDateTimeDesc(account, false));
             model.addAttribute("studyList",studyRepository.findByAccount(
                     accountLoaded.getTags(),
                     accountLoaded.getZones()
             ));
+            model.addAttribute("studyManagerOf",
+                    studyRepository.findFirst5ByManagersContainingAndClosedOrderByPublishedDateTimeDesc(account, false));
+            model.addAttribute("studyMemberOf",
+                    studyRepository.findFirst5ByMembersContainingAndClosedOrderByPublishedDateTimeDesc(account, false));
+            return "index-after-login";
         }
 
         model.addAttribute("studyList",studyRepository.findFirst9ByPublishedAndClosedOrderByPublishedDateTimeDesc(true,false));

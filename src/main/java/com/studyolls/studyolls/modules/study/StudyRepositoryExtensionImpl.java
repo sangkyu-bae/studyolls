@@ -4,13 +4,16 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.JPQLQuery;
 import com.studyolls.studyolls.modules.account.QAccount;
 import com.studyolls.studyolls.modules.tag.QTag;
+import com.studyolls.studyolls.modules.tag.Tag;
 import com.studyolls.studyolls.modules.zone.QZone;
+import com.studyolls.studyolls.modules.zone.Zone;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
+import java.util.Set;
 
 public class StudyRepositoryExtensionImpl extends QuerydslRepositorySupport implements StudyRepositoryExtension{
 
@@ -33,5 +36,21 @@ public class StudyRepositoryExtensionImpl extends QuerydslRepositorySupport impl
         QueryResults<Study> fetchResults = pageableQuery.fetchResults();
 
         return new PageImpl<>(fetchResults.getResults(),pageable,fetchResults.getTotal());
+    }
+
+    @Override
+    public List<Study> findByAccount(Set<Tag> tags, Set<Zone> zones) {
+        QStudy study=QStudy.study;
+        JPQLQuery<Study>query=from(study).where(study.published.isTrue()
+                .and(study.closed.isFalse())
+                .and(study.tags.any().in(tags))
+                .and(study.zones.any().in(zones)))
+                .leftJoin(study.tags,QTag.tag).fetchJoin()
+                .leftJoin(study.zones,QZone.zone).fetchJoin()
+                .orderBy(study.publishedDateTime.desc())
+                .distinct()
+                .limit(9);
+
+        return query.fetch();
     }
 }
